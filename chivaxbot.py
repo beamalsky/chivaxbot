@@ -59,7 +59,7 @@ def get_tweet():
     write_svg(vax_output_path, vax_colors)
     write_svg(deaths_output_path, deaths_colors)
 
-    tweet_text = "Chicago is currently reporting {vaccinations} vaccinations and {deaths} total deaths from Covid-19.\n\nWho is dying:               Who is vaccinated:".format(
+    tweet_text = "Chicago is currently reporting {vaccinations} vaccinations and {deaths} total deaths from Covid-19.\n\nWho is dying:           Who is vaccinated:".format(
         vaccinations=f'{vax_sum:,}',
         deaths=f'{deaths_sum:,}',
     )
