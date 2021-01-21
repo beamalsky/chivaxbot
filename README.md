@@ -1,4 +1,4 @@
-# 💪 ChiVaxBot
+# 🛤 ChiVaxBot
 
 Which Chicagoans are getting vaccinated? A bot for the [South Side Weekly](https://southsideweekly.com/).
 
