@@ -4,7 +4,7 @@ import tweepy
 
 from chivaxbot import get_tweet
 
-LOCAL_DEVELOPMENT = True
+LOCAL_DEVELOPMENT = False
 
 if LOCAL_DEVELOPMENT:
     from secrets import *
