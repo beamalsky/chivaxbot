@@ -1,0 +1,14 @@
+version: '2.4'
+
+services:
+  app:
+    image: chivaxbot
+    container_name: chivaxbot
+    restart: always
+    build: .
+    stdin_open: true
+    tty: true
+    ports:
+      - 9000:9000
+    volumes:
+      - .:/app
