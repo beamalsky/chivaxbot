@@ -1,6 +1,6 @@
 # 💪 ChiVaxBot
 
-Which Chicagoans are getting vaccinated? A bot for South Side Weekly.
+Which Chicagoans are getting vaccinated? A bot for the [South Side Weekly](https://southsideweekly.com/).
 
 Uses Python, tweepy, and Heroku. S/o to [this post](https://dev.to/emcain/how-to-set-up-a-twitter-bot-with-python-and-heroku-1n39) by [Emily Cain](https://emcain.github.io/) for the guiding method.
 

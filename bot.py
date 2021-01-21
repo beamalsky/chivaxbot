@@ -5,7 +5,7 @@ from pprint import pprint
 
 from chivaxbot import get_tweet
 
-LOCAL_DEVELOPMENT = True
+LOCAL_DEVELOPMENT = False
 
 if LOCAL_DEVELOPMENT:
     from secrets import *
@@ -13,15 +13,14 @@ if LOCAL_DEVELOPMENT:
 else:
     from os import environ
 
-    CONSUMER_KEY = environ['CONSUMER_KEY']
-    CONSUMER_SECRET = environ['CONSUMER_SECRET']
-    ACCESS_KEY = environ['ACCESS_KEY']
-    ACCESS_SECRET = environ['ACCESS_SECRET']
+    API_KEY = environ['API_KEY']
+    API_KEY_SECRET = environ['API_KEY_SECRET']
+    ACCESS_TOKEN = environ['ACCESS_TOKEN']
+    ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
 
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+auth = tweepy.OAuthHandler(API_KEY, API_KEY_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
-
 tweet = get_tweet()
 
 images = [tweet["deaths_map_path"], tweet["vax_map_path"]]
