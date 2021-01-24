@@ -1,6 +1,7 @@
 import time
 import sys
 import tweepy
+import sentry_sdk
 
 from chivaxbot import get_tweet
 
@@ -16,6 +17,11 @@ else:
     API_KEY_SECRET = environ['API_KEY_SECRET']
     ACCESS_TOKEN = environ['ACCESS_TOKEN']
     ACCESS_TOKEN_SECRET = environ['ACCESS_TOKEN_SECRET']
+    SENTRY_URL = environ['SENTRY_URL']
+    sentry_sdk.init(
+        SENTRY_URL,
+        traces_sample_rate=1.0
+    )
 
 auth = tweepy.OAuthHandler(API_KEY, API_KEY_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)

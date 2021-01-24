@@ -8,16 +8,19 @@ from cairosvg import svg2png
 from datetime import date, datetime, timedelta
 import numpy as np
 
+# source: https://data.cityofchicago.org/Health-Human-Services/COVID-19-Vaccine-Doses-by-ZIP-Code-Series-Complete/8u6c-48j3
 vax_url = "https://data.cityofchicago.org/api/views/553k-3xzc/rows.json?accessType=DOWNLOAD"
 vax_svg_path = os.path.join(os.getcwd(), "data", "zipcodes-vax.svg")
+
+# source: https://data.cityofchicago.org/Health-Human-Services/COVID-19-Cases-Tests-and-Deaths-by-ZIP-Code/yhhz-zm2v
 deaths_url= "https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.json?accessType=DOWNLOAD"
 deaths_svg_path = os.path.join(os.getcwd(), "data", "zipcodes-deaths.svg")
 
 vax_colorscale = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]
 deaths_colorscale =  ["#feebe2", "#f3cea3", '#f3b875', '#C83302', '#992702']
+
 now = datetime.now(pytz.timezone('America/Chicago'))
 yesterday = (now - timedelta(days = 1))
-
 vax_output_path = os.path.join(os.getcwd(), "exports", "vax-{}.png".format(
     now.strftime("%Y-%m-%d-%H%M")
 ))
@@ -92,16 +95,16 @@ def get_colors_dict(values_dict, colorscale):
         # when they appear in the SVG
         svg_name = "zip{}".format(name)
 
-        # divide results into 5 even quantiles
-        if (value < np.quantile(arr, .20)):
+        # divide results into 5 even percentiles
+        if (value < np.percentile(arr, 20)):
             colors_dict[svg_name] = colorscale[0]
-        elif (value < np.quantile(arr, .40)):
+        elif (value < np.percentile(arr, 40)):
             colors_dict[svg_name] = colorscale[1]
-        elif (value < np.quantile(arr, .60)):
+        elif (value < np.percentile(arr, 60)):
             colors_dict[svg_name] = colorscale[2]
-        elif (value < np.quantile(arr, .80)):
+        elif (value < np.percentile(arr, 80)):
             colors_dict[svg_name] = colorscale[3]
-        elif (value <= np.quantile(arr, 1)):
+        elif (value <= np.percentile(arr, 100)):
             colors_dict[svg_name] = colorscale[4]
         else:
             colors_dict[svg_name] = "white"
