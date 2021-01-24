@@ -24,7 +24,15 @@ tweet = get_tweet()
 
 images = [tweet["deaths_map_path"], tweet["vax_map_path"]]
 media_ids = [api.media_upload(i).media_id_string for i in images]
+alt_text = tweet["alt_text"]
+
+for id in media_ids:
+    api.create_media_metadata(
+        media_id=id,
+        alt_text=alt_text
+    )
+
 api.update_status(
-    status=tweet["tweet_text"], 
+    status=tweet["tweet_text"],
     media_ids=media_ids
 )
