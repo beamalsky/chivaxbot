@@ -6,7 +6,7 @@ import pytz
 
 from cairosvg import svg2png
 from datetime import date, datetime, timedelta
-import numpy as np 
+import numpy as np
 
 vax_url = "https://data.cityofchicago.org/api/views/553k-3xzc/rows.json?accessType=DOWNLOAD"
 deaths_url= "https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.json?accessType=DOWNLOAD"
@@ -63,10 +63,20 @@ def get_tweet():
         vaccinations=f'{vax_sum:,}',
         deaths=f'{deaths_sum:,}',
     )
+
+    alt_text = '''
+    Two maps of Chicago, side by side. The map on the left shows COVID-19 deaths
+    per capita by ZIP code. The map on the right shows completed COVID-19
+    vaccination per capita by ZIP code. The maps reveal a disconnect between
+    where residents are getting vaccinated and where COVID-19 deaths are
+    concentrated.
+    '''
+
     return {
         "tweet_text": tweet_text,
         "deaths_map_path": deaths_output_path,
         "vax_map_path": vax_output_path,
+        "alt_text": alt_text
     }
 
 
