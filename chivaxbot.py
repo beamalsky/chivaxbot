@@ -9,11 +9,12 @@ from datetime import date, datetime, timedelta
 import numpy as np 
 
 vax_url = "https://data.cityofchicago.org/api/views/553k-3xzc/rows.json?accessType=DOWNLOAD"
+vax_svg_path = os.path.join(os.getcwd(), "data", "zipcodes-vax.svg")
 deaths_url= "https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.json?accessType=DOWNLOAD"
-zip_svg_path = os.path.join(os.getcwd(), "data", "zipcodes.svg")
+deaths_svg_path = os.path.join(os.getcwd(), "data", "zipcodes-deaths.svg")
 
 vax_colorscale = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]
-deaths_colorscale = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]
+deaths_colorscale =  ["#feebe2", "#f3cea3", '#f3b875', '#C83302', '#992702'] # ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]
 now = datetime.now(pytz.timezone('America/Chicago'))
 yesterday = (now - timedelta(days = 1))
 
@@ -35,6 +36,7 @@ def get_tweet():
     # also, a sum of all vaccinations
     vax_perc = {}
     vax_sum = 0
+    population_sum = 0
     max_date = max([datetime.strptime(i[9], '%Y-%m-%dT00:00:00') for i in vax_res_json["data"]])
     for row in vax_res_json["data"]:
         # we only want dose cumulatives from the latest date
@@ -42,6 +44,7 @@ def get_tweet():
         if max_date == datetime.strptime(row[9], '%Y-%m-%dT00:00:00'):
             vax_perc[row[8]] = float(row[17])
             vax_sum += int(row[16])
+            population_sum += int(row[18])
 
     deaths_perc = {}
     deaths_sum = 0
@@ -56,12 +59,13 @@ def get_tweet():
     vax_colors = get_colors_dict(vax_perc, vax_colorscale)
     deaths_colors = get_colors_dict(deaths_perc, deaths_colorscale)
 
-    write_svg(vax_output_path, vax_colors)
-    write_svg(deaths_output_path, deaths_colors)
+    write_svg(vax_svg_path, vax_output_path, vax_colors)
+    write_svg(deaths_svg_path, deaths_output_path, deaths_colors)
 
-    tweet_text = "Chicago is currently reporting {vaccinations} vaccinations and {deaths} total deaths from Covid-19.\n\nWho is dying:           Who is vaccinated:".format(
+    percent_vaccinated = vax_sum / population_sum * 100
+    tweet_text = "Chicago is currently reporting {vaccinations} people fully vaccinated: {percent}% of the population\n\nWho is dying:           Who is vaccinated:".format(
         vaccinations=f'{vax_sum:,}',
-        deaths=f'{deaths_sum:,}',
+        percent=round(percent_vaccinated, 1),
     )
     return {
         "tweet_text": tweet_text,
@@ -95,9 +99,9 @@ def get_colors_dict(values_dict, colorscale):
     return colors_dict
 
 
-def write_svg(output_path, colors_dict):
+def write_svg(svg_path, output_path, colors_dict):
     # write colors into the SVG file and export
-    with open(zip_svg_path, "r") as svg_file:
+    with open(svg_path, "r") as svg_file:
         svg_string = svg_file.read().format(**colors_dict)
         svg2png(
             bytestring=svg_string,
