@@ -14,7 +14,7 @@ deaths_url= "https://data.cityofchicago.org/api/views/yhhz-zm2v/rows.json?access
 deaths_svg_path = os.path.join(os.getcwd(), "data", "zipcodes-deaths.svg")
 
 vax_colorscale = ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]
-deaths_colorscale =  ["#feebe2", "#f3cea3", '#f3b875', '#C83302', '#992702'] # ["#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]
+deaths_colorscale =  ["#feebe2", "#f3cea3", '#f3b875', '#C83302', '#992702']
 now = datetime.now(pytz.timezone('America/Chicago'))
 yesterday = (now - timedelta(days = 1))
 
