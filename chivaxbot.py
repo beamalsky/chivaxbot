@@ -59,8 +59,8 @@ def get_tweet():
             deaths_sum += int(row[23])
 
     # then, create a dictionary of zip codes and colors
-    vax_colors = get_colors_dict(vax_perc, vax_colorscale)
-    deaths_colors = get_colors_dict(deaths_perc, deaths_colorscale)
+    vax_colors = get_colors_dict(vax_perc, vax_colorscale, "vax")
+    deaths_colors = get_colors_dict(deaths_perc, deaths_colorscale, "deaths")
 
     write_svg(vax_svg_path, vax_output_path, vax_colors)
     write_svg(deaths_svg_path, deaths_output_path, deaths_colors)
@@ -87,25 +87,53 @@ def get_tweet():
     }
 
 
-def get_colors_dict(values_dict, colorscale):
+def get_colors_dict(values_dict, colorscale, data_type):
     colors_dict = {}
     arr = list(values_dict.values())
+
+    colors_dict["key_color1"] = colorscale[0]
+    colors_dict["key_color2"] = colorscale[1]
+    colors_dict["key_color3"] = colorscale[2]
+    colors_dict["key_color4"] = colorscale[3]
+    colors_dict["key_color5"] = colorscale[4]
+
+    key_label1_raw = np.percentile(arr, 20)
+    key_label2_raw = np.percentile(arr, 40)
+    key_label3_raw = np.percentile(arr, 60)
+    key_label4_raw = np.percentile(arr, 80)
+    key_label5_raw = np.percentile(arr, 100)
+
+    if data_type == "deaths":
+        colors_dict["key_label1"] = round(key_label1_raw, 1)
+        colors_dict["key_label2"] = round(key_label2_raw, 1)
+        colors_dict["key_label3"] = round(key_label3_raw, 1)
+        colors_dict["key_label4"] = round(key_label4_raw, 1)
+        colors_dict["key_label5"] = round(key_label5_raw, 1)
+    elif data_type == "vax":
+        colors_dict["key_label1"] = "{}%".format(round(key_label1_raw * 100, 1))
+        colors_dict["key_label2"] = "{}%".format(round(key_label2_raw * 100, 1))
+        colors_dict["key_label3"] = "{}%".format(round(key_label3_raw * 100, 1))
+        colors_dict["key_label4"] = "{}%".format(round(key_label4_raw * 100, 1))
+        colors_dict["key_label5"] = "{}%".format(round(key_label5_raw * 100, 1))
+    else:
+        raise Exception("Unexpected key passed to function. Choose 'vax' or 'deaths'")
+
     for name, value in values_dict.items():
         # prepend "zip" to make these names less confusing
         # when they appear in the SVG
         svg_name = "zip{}".format(name)
 
         # divide results into 5 even percentiles
-        if (value < np.percentile(arr, 20)):
-            colors_dict[svg_name] = colorscale[0]
-        elif (value < np.percentile(arr, 40)):
-            colors_dict[svg_name] = colorscale[1]
-        elif (value < np.percentile(arr, 60)):
-            colors_dict[svg_name] = colorscale[2]
-        elif (value < np.percentile(arr, 80)):
-            colors_dict[svg_name] = colorscale[3]
-        elif (value <= np.percentile(arr, 100)):
-            colors_dict[svg_name] = colorscale[4]
+        if (value < key_label1_raw):
+            colors_dict[svg_name] = colors_dict["key_color1"]
+        elif (value < key_label2_raw):
+            colors_dict[svg_name] = colors_dict["key_color2"]
+        elif (value < key_label3_raw):
+            colors_dict[svg_name] = colors_dict["key_color3"]
+        elif (value < key_label4_raw):
+            colors_dict[svg_name] = colors_dict["key_color4"]
+        elif (value <= key_label5_raw):
+            colors_dict[svg_name] = colors_dict["key_color5"]
         else:
             colors_dict[svg_name] = "white"
 
