@@ -66,7 +66,8 @@ def get_tweet():
     write_svg(deaths_svg_path, deaths_output_path, deaths_colors)
 
     percent_vaccinated = vax_sum / population_sum * 100
-    tweet_text = "Chicago is currently reporting {vaccinations} people fully vaccinated: {percent}% of the population\n\nWho is dying:           Who is vaccinated:".format(
+    tweet_text = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.\n\nWho is dying:           Who is vaccinated:".format(
+        date=now.strftime("%B %d, %Y"), # January 26, 2021
         vaccinations=f'{vax_sum:,}',
         percent=round(percent_vaccinated, 1),
     )
