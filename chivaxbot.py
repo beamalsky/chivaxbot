@@ -3,6 +3,7 @@ import requests
 import csv
 import json
 import pytz
+import logging
 
 from cairosvg import svg2png
 from datetime import date, datetime, timedelta
@@ -152,7 +153,15 @@ def get_tweet():
 
 def get_colors_dict(values_dict, colorscale, data_type):
     colors_dict = {}
-    arr = list([value for name, value in values_dict.items() if name in chicago_zips])
+    arr = [value for name, value in values_dict.items() if name in chicago_zips]
+
+    # alert us if there are unexpected geo values
+    bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips and name != "Unknown"]
+    if len(bad_zips_arr) > 0:
+        logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
+            data_type=data_type,
+            bad_zips=", ".join(bad_zips_arr)),
+        )
 
     colors_dict["key_color1"] = colorscale[0]
     colors_dict["key_color2"] = colorscale[1]
@@ -182,26 +191,23 @@ def get_colors_dict(values_dict, colorscale, data_type):
         raise Exception("Unexpected key passed to function. Choose 'vax' or 'deaths'")
 
     for name, value in values_dict.items():
-        if name in chicago_zips:
-            # prepend "zip" to make these names less confusing
-            # when they appear in the SVG
-            svg_name = "zip{}".format(name)
+        # prepend "zip" to make these names less confusing
+        # when they appear in the SVG
+        svg_name = "zip{}".format(name)
 
-            # divide results into 5 even percentiles
-            if (value < key_label1_raw):
-                colors_dict[svg_name] = colors_dict["key_color1"]
-            elif (value < key_label2_raw):
-                colors_dict[svg_name] = colors_dict["key_color2"]
-            elif (value < key_label3_raw):
-                colors_dict[svg_name] = colors_dict["key_color3"]
-            elif (value < key_label4_raw):
-                colors_dict[svg_name] = colors_dict["key_color4"]
-            elif (value <= key_label5_raw):
-                colors_dict[svg_name] = colors_dict["key_color5"]
-            else:
-                colors_dict[svg_name] = "white"
-        else: 
-            print("Omitting zip not in Chicago: {}".format(name))
+        # divide results into 5 even percentiles
+        if (value < key_label1_raw):
+            colors_dict[svg_name] = colors_dict["key_color1"]
+        elif (value < key_label2_raw):
+            colors_dict[svg_name] = colors_dict["key_color2"]
+        elif (value < key_label3_raw):
+            colors_dict[svg_name] = colors_dict["key_color3"]
+        elif (value < key_label4_raw):
+            colors_dict[svg_name] = colors_dict["key_color4"]
+        elif (value <= key_label5_raw):
+            colors_dict[svg_name] = colors_dict["key_color5"]
+        else:
+            colors_dict[svg_name] = "white"
 
     return colors_dict
 
