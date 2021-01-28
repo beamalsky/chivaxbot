@@ -155,7 +155,7 @@ def get_colors_dict(values_dict, colorscale, data_type):
     colors_dict = {}
     arr = [value for name, value in values_dict.items() if name in chicago_zips]
 
-    # alert us if there are unexpected geo values
+    # alert us if there are unexpected zip values
     bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips and name != "Unknown"]
     if len(bad_zips_arr) > 0:
         logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
