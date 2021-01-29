@@ -3,6 +3,7 @@ import requests
 import csv
 import json
 import pytz
+import logging
 
 from cairosvg import svg2png
 from datetime import date, datetime, timedelta
@@ -27,6 +28,68 @@ vax_output_path = os.path.join(os.getcwd(), "exports", "vax-{}.png".format(
 deaths_output_path = os.path.join(os.getcwd(), "exports", "deaths-{}.png".format(
     now.strftime("%Y-%m-%d-%H%M")
 ))
+
+chicago_zips = [
+    "60638",
+    "60601",
+    "60606",
+    "60611",
+    "60666",
+    "60645",
+    "60625",
+    "60640",
+    "60626",
+    "60657",
+    "60615",
+    "60621",
+    "60651",
+    "60707",
+    "60631",
+    "60602",
+    "60607",
+    "60630",
+    "60641",
+    "60622",
+    "60636",
+    "60610",
+    "60659",
+    "60614",
+    "60644",
+    "60603",
+    "60634",
+    "60637",
+    "60649",
+    "60618",
+    "60623",
+    "60647",
+    "60629",
+    "60613",
+    "60660",
+    "60654",
+    "60608",
+    "60642",
+    "60604",
+    "60653",
+    "60619",
+    "60655",
+    "60617",
+    "60633",
+    "60612",
+    "60646",
+    "60643",
+    "60628",
+    "60661",
+    "60624",
+    "60609",
+    "60827",
+    "60639",
+    "60632",
+    "60656",
+    "60620",
+    "60605",
+    "60652",
+    "60616"
+]
 
 def get_tweet():
     vax_res = requests.get(vax_url)
@@ -90,7 +153,15 @@ def get_tweet():
 
 def get_colors_dict(values_dict, colorscale, data_type):
     colors_dict = {}
-    arr = list(values_dict.values())
+    arr = [value for name, value in values_dict.items() if name in chicago_zips]
+
+    # alert us if there are unexpected zip values
+    bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips and name != "Unknown"]
+    if len(bad_zips_arr) > 0:
+        logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
+            data_type=data_type,
+            bad_zips=", ".join(bad_zips_arr)),
+        )
 
     colors_dict["key_color1"] = colorscale[0]
     colors_dict["key_color2"] = colorscale[1]
