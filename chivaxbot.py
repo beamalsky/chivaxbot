@@ -237,6 +237,7 @@ def write_svg(svg_path, output_paths, colors_dict):
     with open(svg_path, "r") as svg_file:
         svg_string = svg_file.read().format(**colors_dict)
         for output_path in output_paths:
+            print("Saving image file to {}".format(output_path))
             svg2png(
                 bytestring=svg_string,
                 write_to=output_path,
@@ -247,4 +248,5 @@ def write_sentence_json(output_path, sentence_text):
     data = {}
     data["sentence"] = sentence_text
     with open(output_path, 'w') as json_file:
+        print("Saving sentence file to {}".format(output_path))
         json.dump(data, json_file)
