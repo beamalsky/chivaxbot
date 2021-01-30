@@ -255,6 +255,7 @@ def write_sentence_json(output_path, sentence_text):
         json.dump(data, json_file)
         print("Saved sentence file {}".format(output_path))
 
+
 # gcloud utils
 def get_bucket(bucket_name, cred_str):
     json_data = json.loads(cred_str, strict=False)
@@ -265,12 +266,12 @@ def get_bucket(bucket_name, cred_str):
         project=bucket_name, credentials=credentials)
     return storage_client.bucket(bucket_name)
 
-def upload_to_gcloud(bucket, source_file_name, destination_blob_name):
-    """Uploads a file to the bucket."""
-    blob = bucket.blob(destination_blob_name)
+def upload_to_gcloud(bucket, source_file_name):
+    destination_name = os.path.basename(source_file_name)
+    blob = bucket.blob(destination_name)
     blob.upload_from_filename(source_file_name)
     print(
         "File {} uploaded to {} on Google Cloud.".format(
-            source_file_name, destination_blob_name
+            source_file_name, destination_name
         )
     )

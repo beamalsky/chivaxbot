@@ -46,17 +46,12 @@ if not LOCAL_DEVELOPMENT:
         media_ids=media_ids
     )
 
-    # upload latest files to Google Cloud for embeds
-    bucket = get_bucket("chivaxbot", GOOGLE_APPLICATION_CREDENTIALS)
-    gcloud_uploads = [
-        ("deaths_map_path_latest", "deaths-latest"), 
-        ("vax_map_path_latest", "vax-latest"), 
-        ("sentence_path_latest", "sentence-latest")
-    ]
+# upload latest files to Google Cloud for embeds
+bucket = get_bucket("chivaxbot", GOOGLE_APPLICATION_CREDENTIALS)
+gcloud_uploads = ["deaths_map_path_latest", "vax_map_path_latest", "sentence_path_latest"]
 
-    for key, filename in gcloud_uploads:
-        upload_to_gcloud(
-            bucket,
-            tweet[key],
-            filename
-        )
+for path in gcloud_uploads:
+    upload_to_gcloud(
+        bucket,
+        tweet[path]
+    )
