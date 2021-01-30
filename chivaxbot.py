@@ -25,9 +25,14 @@ yesterday = (now - timedelta(days = 1))
 vax_output_path = os.path.join(os.getcwd(), "exports", "vax-{}.png".format(
     now.strftime("%Y-%m-%d-%H%M")
 ))
+vax_output_path_latest = os.path.join(os.getcwd(), "exports", "vax-latest.png")
+
 deaths_output_path = os.path.join(os.getcwd(), "exports", "deaths-{}.png".format(
     now.strftime("%Y-%m-%d-%H%M")
 ))
+deaths_output_path_latest = os.path.join(os.getcwd(), "exports", "deaths-latest.png")
+
+sentence_output_path_latest = os.path.join(os.getcwd(), "exports", "sentence-latest.json")
 
 chicago_zips = [
     "60638",
@@ -121,18 +126,30 @@ def get_tweet():
             deaths_perc[row[8]] = float(row[25])
             deaths_sum += int(row[23])
 
+    percent_vaccinated = vax_sum / population_sum * 100
+    base_sentence = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.".format(
+        date=now.strftime("%B %d, %Y"), # January 26, 2021
+        vaccinations=f'{vax_sum:,}',
+        percent=round(percent_vaccinated, 1),
+    )
+
+    write_sentence_json(sentence_output_path_latest, base_sentence)
+
+    tweet_text = base_sentence + "\n\nWho is dying:           Who is vaccinated:"
+
     # then, create a dictionary of zip codes and colors
     vax_colors = get_colors_dict(vax_perc, vax_colorscale, "vax")
     deaths_colors = get_colors_dict(deaths_perc, deaths_colorscale, "deaths")
 
-    write_svg(vax_svg_path, vax_output_path, vax_colors)
-    write_svg(deaths_svg_path, deaths_output_path, deaths_colors)
-
-    percent_vaccinated = vax_sum / population_sum * 100
-    tweet_text = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.\n\nWho is dying:           Who is vaccinated:".format(
-        date=now.strftime("%B %d, %Y"), # January 26, 2021
-        vaccinations=f'{vax_sum:,}',
-        percent=round(percent_vaccinated, 1),
+    write_svg(
+        vax_svg_path,
+        [vax_output_path, vax_output_path_latest],
+        vax_colors
+    )
+    write_svg(
+        deaths_svg_path,
+        [deaths_output_path, deaths_output_path_latest],
+        deaths_colors
     )
 
     alt_text = '''
@@ -162,7 +179,7 @@ def get_colors_dict(values_dict, colorscale, data_type):
             data_type=data_type,
             bad_zips=", ".join(bad_zips_arr)),
         )
-        
+
     colors_dict["key_color1"] = colorscale[0]
     colors_dict["key_color2"] = colorscale[1]
     colors_dict["key_color3"] = colorscale[2]
@@ -215,12 +232,19 @@ def get_colors_dict(values_dict, colorscale, data_type):
     return colors_dict
 
 
-def write_svg(svg_path, output_path, colors_dict):
+def write_svg(svg_path, output_paths, colors_dict):
     # write colors into the SVG file and export
     with open(svg_path, "r") as svg_file:
         svg_string = svg_file.read().format(**colors_dict)
-        svg2png(
-            bytestring=svg_string,
-            write_to=output_path,
-            background_color="white",
-        )
+        for output_path in output_paths:
+            svg2png(
+                bytestring=svg_string,
+                write_to=output_path,
+                background_color="white",
+            )
+
+def write_sentence_json(output_path, sentence_text):
+    data = {}
+    data["sentence"] = sentence_text
+    with open(output_path, 'w') as json_file:
+        json.dump(data, json_file)
