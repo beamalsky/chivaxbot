@@ -162,13 +162,14 @@ def get_colors_dict(values_dict, colorscale, data_type):
             data_type=data_type,
             bad_zips=", ".join(bad_zips_arr)),
         )
-
+        
     colors_dict["key_color1"] = colorscale[0]
     colors_dict["key_color2"] = colorscale[1]
     colors_dict["key_color3"] = colorscale[2]
     colors_dict["key_color4"] = colorscale[3]
     colors_dict["key_color5"] = colorscale[4]
 
+    key_label0_raw = np.percentile(arr, 0)
     key_label1_raw = np.percentile(arr, 20)
     key_label2_raw = np.percentile(arr, 40)
     key_label3_raw = np.percentile(arr, 60)
@@ -176,12 +177,14 @@ def get_colors_dict(values_dict, colorscale, data_type):
     key_label5_raw = np.percentile(arr, 100)
 
     if data_type == "deaths":
+        colors_dict["key_label0"] = round(key_label0_raw, 1)
         colors_dict["key_label1"] = round(key_label1_raw, 1)
         colors_dict["key_label2"] = round(key_label2_raw, 1)
         colors_dict["key_label3"] = round(key_label3_raw, 1)
         colors_dict["key_label4"] = round(key_label4_raw, 1)
         colors_dict["key_label5"] = round(key_label5_raw, 1)
     elif data_type == "vax":
+        colors_dict["key_label0"] = "{}%".format(round(key_label0_raw * 100, 1))
         colors_dict["key_label1"] = "{}%".format(round(key_label1_raw * 100, 1))
         colors_dict["key_label2"] = "{}%".format(round(key_label2_raw * 100, 1))
         colors_dict["key_label3"] = "{}%".format(round(key_label3_raw * 100, 1))

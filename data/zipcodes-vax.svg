@@ -4960,7 +4960,7 @@
 	</g>
 	<g>
 		<rect x="131.79401" y="363.56467" class="st0" width="160.5" height="13.5"/>
-		<text transform="matrix(1 0 0 1 131.79401 372.67258)" class="st1 st2">0 to {key_label1}</text>
+		<text transform="matrix(1 0 0 1 131.79401 372.67258)" class="st1 st2">{key_label0} to {key_label1}</text>
 		<rect x="131.79401" y="390.56473" class="st0" width="160.5" height="13.5"/>
 		<text transform="matrix(1 0 0 1 131.79401 399.67264)" class="st1 st2">{key_label1} to {key_label2}</text>
 		<rect x="131.79401" y="417.56479" class="st0" width="160.5" height="13.5"/>
