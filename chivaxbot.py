@@ -7,6 +7,8 @@ import logging
 
 from cairosvg import svg2png
 from datetime import date, datetime, timedelta
+from google.cloud import storage
+from google.oauth2 import service_account
 import numpy as np
 
 # source: https://data.cityofchicago.org/Health-Human-Services/COVID-19-Vaccine-Doses-by-ZIP-Code-Series-Complete/8u6c-48j3
@@ -164,7 +166,10 @@ def get_tweet():
         "tweet_text": tweet_text,
         "deaths_map_path": deaths_output_path,
         "vax_map_path": vax_output_path,
-        "alt_text": alt_text
+        "alt_text": alt_text,
+        "deaths_map_path_latest": deaths_output_path_latest,
+        "vax_map_path_latest": vax_output_path_latest,
+        "sentence_path_latest": sentence_output_path_latest,
     }
 
 
@@ -231,22 +236,41 @@ def get_colors_dict(values_dict, colorscale, data_type):
 
     return colors_dict
 
-
 def write_svg(svg_path, output_paths, colors_dict):
     # write colors into the SVG file and export
     with open(svg_path, "r") as svg_file:
         svg_string = svg_file.read().format(**colors_dict)
         for output_path in output_paths:
-            print("Saving image file to {}".format(output_path))
             svg2png(
                 bytestring=svg_string,
                 write_to=output_path,
                 background_color="white",
             )
+            print("Saved image file {}".format(output_path))
 
 def write_sentence_json(output_path, sentence_text):
     data = {}
     data["sentence"] = sentence_text
     with open(output_path, 'w') as json_file:
-        print("Saving sentence file to {}".format(output_path))
         json.dump(data, json_file)
+        print("Saved sentence file {}".format(output_path))
+
+# gcloud utils
+def get_bucket(bucket_name, cred_str):
+    json_data = json.loads(cred_str, strict=False)
+    json_data['private_key'] = json_data['private_key'].replace('\\n', '\n')
+    credentials = service_account.Credentials.from_service_account_info(
+        json_data)
+    storage_client = storage.Client(
+        project=bucket_name, credentials=credentials)
+    return storage_client.bucket(bucket_name)
+
+def upload_to_gcloud(bucket, source_file_name, destination_blob_name):
+    """Uploads a file to the bucket."""
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file_name)
+    print(
+        "File {} uploaded to {} on Google Cloud.".format(
+            source_file_name, destination_blob_name
+        )
+    )
