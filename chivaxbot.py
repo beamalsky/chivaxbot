@@ -128,16 +128,20 @@ def get_tweet():
             deaths_perc[row[8]] = float(row[25])
             deaths_sum += int(row[23])
 
-    percent_vaccinated = vax_sum / population_sum * 100
-    base_sentence = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.".format(
-        date=now.strftime("%B %d, %Y"), # January 26, 2021
-        vaccinations=f'{vax_sum:,}',
-        percent=round(percent_vaccinated, 1),
+    as_of = now.strftime("%B %-d, %Y") # January 2, 2021
+    vaccinations = f'{vax_sum:,}'
+    percent_vaccinated = round(vax_sum / population_sum * 100, 1)
+    tweet_text = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.\n\nWho is dying:           Who is vaccinated:".format(
+        date=as_of,
+        vaccinations=vaccinations,
+        percent=percent_vaccinated,
     )
 
-    write_sentence_json(sentence_output_path_latest, base_sentence)
-
-    tweet_text = base_sentence + "\n\nWho is dying:           Who is vaccinated:"
+    write_sentence_json(sentence_output_path_latest, {
+        "as_of": as_of, 
+        "vaccinations": vaccinations,
+        "percent_vaccinated": percent_vaccinated,
+    })
 
     # then, create a dictionary of zip codes and colors
     vax_colors = get_colors_dict(vax_perc, vax_colorscale, "vax")
@@ -248,11 +252,9 @@ def write_svg(svg_path, output_paths, colors_dict):
             )
             print("Saved image file {}".format(output_path))
 
-def write_sentence_json(output_path, sentence_text):
-    data = {}
-    data["sentence"] = sentence_text
+def write_sentence_json(output_path, dict):
     with open(output_path, 'w') as json_file:
-        json.dump(data, json_file)
+        json.dump(dict, json_file)
         print("Saved sentence file {}".format(output_path))
 
 
