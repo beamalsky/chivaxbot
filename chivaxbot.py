@@ -195,12 +195,12 @@ def get_colors_dict(values_dict, colorscale, data_type):
     colors_dict["key_color4"] = colorscale[3]
     colors_dict["key_color5"] = colorscale[4]
 
-    key_label0_raw = np.percentile(arr, 0)
-    key_label1_raw = np.percentile(arr, 20)
-    key_label2_raw = np.percentile(arr, 40)
-    key_label3_raw = np.percentile(arr, 60)
-    key_label4_raw = np.percentile(arr, 80)
-    key_label5_raw = np.percentile(arr, 100)
+    key_label0_raw = np.percentile(arr, 0, interpolation="nearest")
+    key_label1_raw = np.percentile(arr, 20, interpolation="nearest")
+    key_label2_raw = np.percentile(arr, 40, interpolation="nearest")
+    key_label3_raw = np.percentile(arr, 60, interpolation="nearest")
+    key_label4_raw = np.percentile(arr, 80, interpolation="nearest")
+    key_label5_raw = np.percentile(arr, 100, interpolation="nearest")
 
     if data_type == "deaths":
         colors_dict["key_label0"] = round(key_label0_raw, 1)
