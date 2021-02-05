@@ -127,7 +127,7 @@ def get_tweet():
             # take "death rate per 100,000 population through the week"
             deaths_perc[row[8]] = float(row[25])
             deaths_sum += int(row[23])
-    
+
     as_of = now.strftime("%B %-d, %Y") # January 2, 2021
     vaccinations = f'{vax_sum:,}'
     percent_vaccinated = round(vax_sum / population_sum * 100, 1)
