@@ -1,0 +1,152 @@
+.chart-container {
+    max-width: 1050px;
+    margin: 0 auto;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+svg {
+    overflow: visible;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    position: relative;
+    left: 30%;
+    -webkit-transform: translateX(-20%);
+    -ms-transform: translateX(-20%);
+    transform: translateX(-20%);
+}
+
+.spacer {
+    height: 1500px;
+}
+
+.filler {
+    height: 20rem;
+    text-align: center;
+}
+
+.filler h2 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 54px;
+}
+
+.filler h4 {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 28px;
+}
+
+.filler p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 24px;
+    text-align: left;
+    margin: 20px auto;
+    line-height: 1.2;
+    max-width: 600px
+}
+
+#scrolly-overlay .scrolly {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 24px;
+    max-width: 60rem;
+    margin: 1rem auto;
+    background-color: #ffffff;
+    padding: 1rem;
+    position: relative;
+}
+
+#scrolly-overlay .scrolly article {
+    padding: 0;
+    max-width: 30rem;
+    margin: 0 auto;
+    position: relative;
+}
+
+#scrolly-overlay .scrolly article .step {
+    min-height: 67vh;
+    margin-bottom: 1rem;
+}
+
+#scrolly-overlay .scrolly article .step:last-of-type {
+    margin-bottom: 0;
+}
+
+#scrolly-overlay .scrolly article .step.is-active p {
+    background-color: #eab676;
+}
+
+#scrolly-overlay .scrolly article .step p {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 400;
+    background-color: #eee;
+    transition: background-color 250ms ease-in-out;
+    color: #21130d;
+}
+
+#scrolly-overlay .scrolly figure.sticky {
+    /* this is the key style for the chart */
+    position: sticky;
+    width: 100%;
+    height: 50vh;
+    /* vh is the unit that divdes the viewport in units of 1/100 */
+    /* height is 50 vh = half the height of the viewport */
+    background: #ffffff;
+    margin: 0;
+    top: 10vh;
+    /* this is how high it should be from top */
+
+    left: 0;
+}
+
+#scrolly-overlay .scrolly figure.sticky .bar-outer {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    width: 90%;
+    height: 4rem;
+    background-color: #fff;
+}
+
+#scrolly-overlay .scrolly figure.sticky .chart-container #pcpZipLines {
+    transition: stroke-opacity 0.5s ease-in-out;
+}
+
+.x .tick line {
+    stroke: rgba(0, 0, 0, .2);
+}
+
+.y .tick line {
+    stroke: rgba(0, 0, 0, .2);
+}
+
+.x .domain {
+    display: none;
+}
+
+.y .domain {
+    display: none;
+}
+
+.y .tick text {
+    font-size: 14px;
+    fill: #333;
+}
+
+.x .tick text {
+    font-size: 14px;
+    fill: #333;
+}
+
+.pop-up {
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 1px;
+  line-height: 1.2;
+  width: 200px;
+  /* height: 100px; */
+  pointer-events: none;
+  background-color: white;
+  padding: 10px;
+}

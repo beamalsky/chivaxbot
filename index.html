@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>120 Days of ChiVaxBot </title>
+    	<link rel="stylesheet" href="assets/main.css" />
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      <!-- <link href="https://fonts.googleapis.com/css2?family=Contrail+One&family=Roboto&display=swap" rel="stylesheet"> -->
+      <script src="https://d3js.org/d3.v6.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+			<script src="https://unpkg.com/enter-view@1.0.0/enter-view.min.js"></script>
+  </head>
+
+  <body>
+		<section class="filler">
+			<p>
+				On January 25, South Side Weekly contributors Bea Malsy and Charmaine
+				Runes created a daily update Twitter bot to track who was dying and who
+				was fully vaccinated from COVID-19 in Chicago. What's changed four
+				months later?
+			</p>
+			<h2>
+				Let's take a look.
+			</h2>
+		</section>
+
+		<section id="scrolly-overlay">
+
+			<div class="scrolly">
+
+				<figure class="sticky">
+			    <div class="chart-container">
+						<h4>Vaccination rates by ZIP code</h4>
+			        <svg id="chart" width="1050px" height="1000px"></svg>
+							<!-- remove pop-up annotations for scrollytelling -->
+			        <!-- <div class="pop-up"></div> -->
+			    </div>
+				</figure>
+
+				<article>
+						<div class='step' show-pcp='0' data-index='0'>
+								<p>
+									On January 25, Mayor Lightfoot and the Chicago Department of
+									Public Health announced a vaccination campaign called Protect
+									Chicago Plus, prioritizing 15 community areas that were most
+									vulnerable to COVID-19 for doses.
+								</p>
+						</div>
+						<div class='step' show-pcp='1' data-index='1'>
+								<p>
+									But four months later, the ZIP codes within these Protect
+									Chicago Plus community areas still lag far behind other parts
+									of the city in vaccination rates.
+								</p>
+						</div>
+				</article>
+
+			</div>
+
+		</section>
+
+		<section class='filler'>
+        <div class="spacer"></div>
+		</section>
+
+  </body>
+
+  <script>
+    // console.log({ d3 })
+
+		const container = d3.select('#scrolly-overlay');
+    const stepSel = container.selectAll('.step');
+
+    function updateChart(index) {
+				console.log("Updating...")
+        const sel = container.select(`[data-index='${index}']`);
+        const opacity = sel.attr('show-pcp');
+        stepSel.classed('is-active', (d, i) => i === index);
+        container.select('#pcpZipLines').style("stroke-opacity", opacity);
+    }
+
+		function init() {
+
+        enterView({ //our main view function
+            selector: stepSel.nodes(),
+            offset: 0.5, //when the slide is 50% away then trigger your chart
+            enter: el => {
+                const index = +d3.select(el).attr('data-index'); //extract the data-index attribute. this can be anything: a filter, a date, whatever.
+                updateChart(index);
+            },
+            exit: el => {
+                let index = +d3.select(el).attr('data-index');
+                index = Math.max(0, index - 1);
+                updateChart(index);
+            }
+        });
+
+    }
+
+    init();
+
+    let width = 800;
+    let height = 500;
+    let margin = { top: 30, right: 10, bottom: 10, left: 30 };
+
+    let svg = d3.select("body")
+        .select("svg")
+
+    // console.log(svg)
+
+    const API_LINK = "https://data.cityofchicago.org/resource/553k-3xzc.json?$limit=10000"
+  // const PCP_LINK = "https://data.cityofchicago.org/resource/2ns9-phjk.json?ccvi_category=HIGH"
+
+    d3.json(API_LINK).then(function (data) {
+
+      console.log(data)
+
+      data.forEach(row => {
+        row.date = new Date(row.date)
+        row._1st_dose_percent_population = +row.vaccine_series_completed_percent_population
+      });
+
+      let x = d3.scaleTime()
+          .domain(d3.extent(data.map(function (d) { return d.date }))) //d3 extent
+          .range([margin.left, width - margin.right])
+
+      let y = d3.scaleLinear()
+          .domain(d3.extent(data.map(function (d) { return d.vaccine_series_completed_percent_population })))
+          .range([height - margin.bottom, margin.top])
+
+      let yAxisSettings = d3.axisLeft(y)
+          .ticks(10)
+          .tickSize(-width)
+          .tickFormat(d3.format(".0%"))
+          .tickPadding(10)
+
+      let xAxisSettings = d3.axisBottom(x)
+          .ticks(6)
+          .tickSize(10)
+          .tickPadding(10)
+          .tickFormat(d3.timeFormat("%B"))
+
+      let bg = svg.append("rect")
+          .attr("x", margin.left)
+          .attr("y", 0)
+          .attr("width", width)
+          .attr("height", height)
+          .style("fill", "rgba(0, 0, 0, 0)")
+
+      let xAxisTicks = svg.append("g")
+          .attr("class", "x axis")
+          .call(xAxisSettings)
+          .attr("transform", `translate(0,${height - margin.bottom})`)
+
+      let yAxisTicks = svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxisSettings)
+          .attr("transform", `translate(${margin.left},0)`)
+
+      let line = d3.line()
+          .defined(d => !isNaN(d.vaccine_series_completed_percent_population))
+          .x(d => x(d.date) )
+          .y(d => y(d._1st_dose_percent_population) )
+          .curve(d3.curveMonotoneX)
+
+      let grouped_data = d3.group(data, d => d.zip_code)
+      console.log(grouped_data)
+
+      let pcpZipCodes = [
+        "60636",
+        "60623",
+        "66029",
+        "60621",
+        "60644",
+        "60651",
+        "60632",
+        "60609",
+        "60707",
+        "60639",
+        "60624",
+        "60628",
+        "60620",
+        "60617"
+      ]
+
+      let highlights = d3.filter(grouped_data, d => pcpZipCodes.includes(d[0]))
+      console.log(highlights)
+
+      // let zips = Array.from(grouped_data.keys())
+      // console.log(zips)
+
+      let popup = d3.select(".pop-up");
+      let timeParser = d3.timeParse("%d-%m-%Y");
+
+      let phase1bStart = timeParser("25-01-2021")
+      let phase1bEnd = timeParser("28-03-2021")
+
+      let phase1b = svg.append("rect")
+        .attr("x", x(phase1bStart))
+        .attr("y", margin.top)
+        .attr("width", x(phase1bEnd) - x(phase1bStart))
+        .attr("height", height - margin.bottom - margin.top)
+        .style("fill", "#eeeeee")
+        .style("opacity", "0.5")
+
+      let phase1bLabel = svg.append("text")
+        .attr("text-anchor", "left")
+        .attr("y", y(0.72))
+        .attr("x", x(phase1bStart) + 10)
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .style("fill", "#7e7e7e")
+        .text("Phase 1b")
+
+      let phase1c = svg.append("rect")
+        .attr("x", x(timeParser("29-03-2021")))
+        .attr("y", margin.top)
+        .attr("width", x(timeParser("19-04-2021")) - x(timeParser("29-03-2021")))
+        .attr("height", height - margin.bottom - margin.top)
+        .style("fill", "#eeeeee")
+        .style("opacity", "0.5")
+
+      let phase1cLabel = svg.append("text")
+        .attr("text-anchor", "left")
+        .attr("y", y(0.72))
+        .attr("x", x(timeParser("29-03-2021")) + 10)
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .style("fill", "#7e7e7e")
+        .text("Phase 1c")
+
+      let line_path = svg.append("g")
+        .selectAll(".line")
+        .data(grouped_data)
+        .join("path")
+        .attr("class", d => {
+            return "line " +  d[0]
+        })
+        .attr("d", d => {
+            return line(d[1])
+        })
+        .style("fill", "none")
+        .style("stroke", "#abdbe3")
+        .style("stroke-width", "1px")
+        .style("stroke-opacity", 1)
+
+      let pcpZipLines = svg.append("g")
+				.attr("id", "pcpZipLines")
+        .selectAll(".line")
+        .data(highlights)
+        .join("path")
+        .attr("class", d => {
+            return "line " +  d[0]
+        })
+        .attr("d", d => {
+            return line(d[1])
+        })
+        .style("fill", "none")
+        .style("stroke", "#eab676")
+        .style("stroke-width", "1.5px")
+				// .style("stroke-opacity", 1)
+
+      // let totalLength = line_path.node().getTotalLength();
+      // console.log(totalLength)
+
+      // line_path.on("mouseover", (event, d) => {
+			//
+      //   line_path
+      //     .style("stroke", "#abdbe3")
+      //     .style("stroke-width", 1)
+      //     .raise()
+			//
+      //   svg.select("line " + d[1].zip_code)
+      //     .style("stroke", "#063970")
+      //     .style("stroke-width", 3)
+      //     .raise()
+			//
+      //   console.log(d)
+			//
+      //   let lang = "In " + d[0] + ", " + "TK"
+			//
+      //   console.log(lang)
+			//
+      //   popup
+      //     .style("opacity", 1)
+      //     .style("left", (event.x) + "px")
+      //     .style("top", (event.y) + "px")
+      //     .html(lang)
+			//
+      // })
+			//
+      // line_path.on("mouseout", (event, d) => {
+      //   line_path
+      //     .style("stroke", "#abdbe3")
+      //     .style("stroke-width", 1)
+			//
+      //   popup
+      //     .style("opacity", 0)
+      // })
+
+      let baseline = svg.append("line")
+        .attr("x1", margin.left)
+        .attr("x2", width + margin.left)
+        .attr("y1", y(0))
+        .attr("y2", y(0))
+        .style("stroke", "black")
+        .style("stroke-width", "2px")
+    })
+
+//     var gif = new GIF({
+//       workers: 3,
+//       quality: 1,
+//       repeat: 0
+//     })
+//
+//     gif.on("progress",function(p){
+//       drawFrame(p * duration);
+//       d3.select(".gif").text(d3.format("%")(p) + " rendered");
+//     });
+//
+//     gif.on("finished",function(blob){
+//       d3.select(".gif")
+//         .text("")
+//         .append("img")
+//           .attr("src",URL.createObjectURL(blob));
+//
+//       d3.timer(drawFrame);
+//     });
+//
+//     var q = queue(1);
+//
+//   // Queue up frames to add to gif stack
+//   d3.range(frames).forEach(function(f){
+//     q.defer(addFrame,f * duration / (frames - 1));
+//   });
+//
+//   // Once all frames are added
+//   q.awaitAll(function(){
+//
+//     // Show SVG as progress bar
+//     outer.style("display","block");
+//
+//     // Start web workers
+//     gif.render();
+//
+//   });
+//
+//   // Add a frame for time t
+//   function addFrame(t,cb) {
+//
+//     // Update SVG
+//     drawFrame(t);
+//
+//     // Create a blob URL from SVG
+//     // including "charset=utf-8" in the blob type breaks in Safari
+//     var img = new Image(),
+//         serialized = new XMLSerializer().serializeToString(outer.node()),
+//         svg = new Blob([serialized], {type: "image/svg+xml"}),
+//         url = URL.createObjectURL(svg);
+//
+//     // Onload, callback to move on to next frame
+//     img.onload = function(){
+//
+//       gif.addFrame(img, {
+//         delay: duration / frames,
+//         copy: true
+//       });
+//
+//       cb(null,t);
+//
+//
+//     };
+//
+//     img.src = url;
+//
+//   }
+//
+//   function drawFrame(t) {
+//
+//     // Need to catch 0% and 100%
+//     // Surely a smarter way to do this
+//     if (t > duration) {
+//       t = t % duration;
+//     }
+//
+//     var length = totalLength * t / duration;
+//
+//     path.attr("stroke-dasharray",length + " " + totalLength);
+//
+//   }
+//
+// });
+
+	</script>
+
+
+</html>
