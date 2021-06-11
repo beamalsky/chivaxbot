@@ -41,7 +41,7 @@ chicago_zips = [
     "60601",
     "60606",
     "60611",
-    "60666",
+    # "60666",
     "60645",
     "60625",
     "60640",
@@ -117,7 +117,7 @@ def get_tweet():
         if max_date == datetime.strptime(row[9], '%Y-%m-%dT00:00:00'):
             vax_perc[row[8]] = float(row[17])
             vax_sum += int(row[16])
-            population_sum += int(row[18])
+            population_sum += int(row[27])
 
     deaths_perc = {}
     deaths_sum = 0
