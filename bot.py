@@ -3,9 +3,11 @@ import sys
 import tweepy
 import sentry_sdk
 
-from chivaxbot import get_tweet, get_bucket, upload_to_gcloud
+from chivaxbot import get_tweet
+from chivaxbot_gif import get_gif_tweet
+from utils import get_bucket, upload_to_gcloud
 
-LOCAL_DEVELOPMENT = False
+LOCAL_DEVELOPMENT = True
 
 if LOCAL_DEVELOPMENT:
     from secrets import *
@@ -24,9 +26,10 @@ else:
         traces_sample_rate=1.0
     )
 
-tweet = get_tweet()
-images = [tweet["deaths_map_path"], tweet["vax_map_path"]]
-alt_text = tweet["alt_text"]
+test = get_gif_tweet()
+# tweet = get_tweet()
+# images = [tweet["deaths_map_path"], tweet["vax_map_path"]]
+# alt_text = tweet["alt_text"]
 
 if not LOCAL_DEVELOPMENT:
     # upload tweet images and text to Twitter

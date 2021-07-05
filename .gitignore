@@ -3,6 +3,6 @@ __pycache__/
 .DS_Store
 .vscode
 
-exports/*.png
-exports/*.json
+exports/*
+exports/*
 cors.json
