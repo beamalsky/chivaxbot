@@ -3,25 +3,26 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="864px" height="486px" viewBox="0 0 864 486" style="enable-background:new 0 0 864 486;" xml:space="preserve">
 <style type="text/css">
-	.st0{{fill:#FEE1EF;}}
 	.st1{{fill:#070707;stroke:#FFFFFF;stroke-width:0.75;stroke-miterlimit:10;}}
 	.st2{{stroke:#FFFFFF;stroke-width:0.75;stroke-miterlimit:10;}}
 	.st3{{fill:#E2E2E2;stroke:#FFFFFF;stroke-width:0.75;stroke-miterlimit:10;}}
 	.st4{{fill:none;}}
 	.st5{{font-family:'ACaslonPro-Bold';}}
 	.st6{{font-size:44.9026642px;}}
-	.st7{{fill:#900552;}}
-	.st8{{fill:#C7207D;}}
-	.st9{{fill:#DF78AF;}}
-	.st10{{fill:#F2B6DB;}}
-	.st11{{fill:#E8F6CF;}}
-	.st12{{fill:#B9E087;}}
-	.st13{{fill:#7FBB41;}}
-	.st14{{fill:#4E9121;}}
-	.st15{{fill:#286419;}}
+	.st7{{fill:{key_color1}}}
+	.st8{{fill:{key_color2}}}
+	.st9{{fill:{key_color3}}}
+	.st10{{fill:{key_color4}}}
+	.st0{{fill:{key_color5}}}
+	.st11{{fill:{key_color6}}}
+	.st12{{fill:{key_color7}}}
+	.st13{{fill:{key_color8}}}
+	.st14{{fill:{key_color9}}}
+	.st15{{fill:{key_color10}}}
 	.st16{{stroke:#727272;stroke-miterlimit:10;}}
 	.st17{{fill:#010500;}}
 	.st18{{fill:#FFFFFF;}}
+	.st19{{fill:{key_color5}}}
 	path{{stroke:#FFFFFF;stroke-miterlimit:10;}}
 	#title{{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;}}
 	#zip60638{{fill:{zip60638}}}
@@ -85,7 +86,7 @@
 	#zip60652{{fill:{zip60652}}}
 	#zip60616{{fill:{zip60616}}}
 </style>
-<rect x="0.6634199" y="264.8721313" class="st0" width="840.392395" height="85.828743"/>
+<rect x="0.6634199" y="264.8721313" class="st19" width="840.392395" height="85.828743"/>
 <g>
 	<path class="st1" d="M675.3746948,143.9149475l0.0125122,0.4842529l0.0013428,0.0527802l0.0039673,0.1345825l0.0026245,0.2322235
 		l0.0039673,0.3522949l0.0046387,0.3424072l0.0006714,0.0283661l0.0012817,0.1649323l0.0006714,0.069931l0.0046387,0.2790833

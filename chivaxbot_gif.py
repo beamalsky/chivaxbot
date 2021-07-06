@@ -17,7 +17,18 @@ gif_output_path = os.path.join(
 )
 
 start_date = '2021-01-25'
-gif_colorscale = ["#900552", "#c7207d", "#df78af", "#f2b6db", "#fee1ef", "#e8f6cf", "#b9e087", "#7fbb41", "#4e9121", "#286419"]
+gif_colorscale = [
+    '#a50026',
+    '#d73027',
+    '#f46d43',
+    '#fdae61',
+    '#fee08b',
+    '#d9ef8b',
+    '#a6d96a',
+    '#66bd63',
+    '#1a9850',
+    '#006837'
+]
 
 def get_gif_tweet():
 	# clear out gif folder (to make local testing easier)
@@ -49,7 +60,10 @@ def get_gif_tweet():
 
 	# turn them into a gif
 	# https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#gif
-	img, *imgs = [Image.open(f) for f in sorted(glob.glob(png_input_paths))]
+ 	# copy the last frame to the front so we get it as the gif preview
+	img_paths = sorted(glob.glob(png_input_paths))
+	img_paths.insert(0, img_paths[-1])
+	img, *imgs = [Image.open(f) for f in img_paths]
 	img.save(
 		fp=gif_output_path,
 		format='GIF',
