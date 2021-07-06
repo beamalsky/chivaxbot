@@ -61,7 +61,7 @@ def get_gif_tweet():
 
 	# generate the sentence and alt text too
 	tweet_text = '''
- 		Read the latest on Chicago's widening vaccine disparity from @maerunes for @SouthSideWeekly: https://southsideweekly.com/chicagos-vaccine-disparity-widens/
+		Read the latest on Chicago's widening vaccine disparity from @maerunes for @SouthSideWeekly: https://southsideweekly.com/chicagos-vaccine-disparity-widens/
 	'''
 
 	alt_text = '''
