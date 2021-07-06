@@ -26,10 +26,8 @@ else:
         traces_sample_rate=1.0
     )
 
-test = get_gif_tweet()
-# tweet = get_tweet()
-# images = [tweet["deaths_map_path"], tweet["vax_map_path"]]
-# alt_text = tweet["alt_text"]
+tweet = get_tweet()
+tweet2 = get_gif_tweet()
 
 if not LOCAL_DEVELOPMENT:
     # upload tweet images and text to Twitter
@@ -37,6 +35,9 @@ if not LOCAL_DEVELOPMENT:
     auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
     api = tweepy.API(auth)
 
+    # first tweet
+    images = [tweet["deaths_map_path"], tweet["vax_map_path"]]
+    alt_text = tweet["alt_text"]
     media_ids = [api.media_upload(i).media_id_string for i in images]
     for id in media_ids:
         api.create_media_metadata(
@@ -44,9 +45,21 @@ if not LOCAL_DEVELOPMENT:
             alt_text=alt_text
         )
 
-    api.update_status(
-        status=tweet["tweet_text"],
+    original_tweet = api.update_status(
+        status=tweet["tweet_text"] + "\n\nWho is dying:		   Who is vaccinated:",
         media_ids=media_ids
+    )
+
+    # second tweet
+    gif_id = api.media_upload(tweet2["gif_path"]).media_id_string
+    api.create_media_metadata(
+        media_id=gif_id,
+        alt_text=tweet2["alt_text"]
+    )
+    api.update_status(
+        in_reply_to_status_id=original_tweet.id,
+        status=tweet["tweet_text"] + "\n\n" + tweet2["tweet_text"],
+        media_ids=[gif_id],
     )
 
     # upload latest files to Google Cloud for embeds

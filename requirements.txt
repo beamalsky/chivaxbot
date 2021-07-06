@@ -1,5 +1,6 @@
 requests==2.22.0
-tweepy==3.10.0
+# pin tweepy to a commit to take advantage of larger file upload limit
+git+https://github.com/tweepy/tweepy.git@145d7cfb902ed7bd10143e201ea89af41ba7d628#egg=tweepy
 flask==1.1.1
 cairosvg==2.5.1
 pytz==2020.5

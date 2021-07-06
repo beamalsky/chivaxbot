@@ -45,7 +45,7 @@ def get_tweet():
 	as_of = now.strftime("%B %-d, %Y") # January 2, 2021
 	vaccinations = f'{vax_dict["vax_sum"]:,}'
 	percent_vaccinated = round(vax_dict["vax_sum"] / vax_dict["population_sum"] * 100, 1)
-	tweet_text = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.\n\nWho is dying:		   Who is vaccinated:".format(
+	tweet_text = "As of {date}, Chicago is reporting {vaccinations} people fully vaccinated: {percent}% of the population.".format(
 		date=as_of,
 		vaccinations=vaccinations,
 		percent=percent_vaccinated,

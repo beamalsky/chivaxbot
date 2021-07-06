@@ -42,9 +42,10 @@ def get_gif_tweet():
 		write_svg(
 			gif_svg_path,
 			[output_path],
-			vax_colors
+			vax_colors,
+   			dpi=75,
 		)
-		date += timedelta(4)
+		date += timedelta(7)
 
 	# turn them into a gif
 	# https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#gif
@@ -61,9 +62,9 @@ def get_gif_tweet():
 	# generate the sentence and alt text too
 	tweet_text = '''
  		Read the latest on Chicago's widening vaccine disparity from @maerunes for @SouthSideWeekly: https://southsideweekly.com/chicagos-vaccine-disparity-widens/
-   '''
+	'''
 
-  alt_text = '''
+	alt_text = '''
 		The animated gif shows a map of Chicago with vaccination rates for each ZIP code over time. As time passes from late January until today, the north west side pulls ahead of the rest of the city in vaccination rates.
 	'''
 

@@ -152,7 +152,7 @@ def get_colors_dict_absolute(values_dict, colorscale, date):
 
 	return colors_dict
 
-def write_svg(svg_path, output_paths, colors_dict):
+def write_svg(svg_path, output_paths, colors_dict, dpi=150):
 	# write colors into the SVG file and export
 	with open(svg_path, "r") as svg_file:
 		svg_string = svg_file.read().format(**colors_dict)
@@ -160,6 +160,7 @@ def write_svg(svg_path, output_paths, colors_dict):
 			svg2png(
 				bytestring=svg_string,
 				write_to=output_path,
+    			dpi=dpi,
 				background_color="white",
 			)
 			print("Saved image file {}".format(output_path))

@@ -6,6 +6,6 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY ./requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --default-timeout=10000 -r requirements.txt
 
 COPY . /app
