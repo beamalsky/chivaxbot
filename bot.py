@@ -7,7 +7,7 @@ from chivaxbot import get_tweet
 from chivaxbot_gif import get_gif_tweet
 from utils import get_bucket, upload_to_gcloud
 
-LOCAL_DEVELOPMENT = True
+LOCAL_DEVELOPMENT = False
 
 if LOCAL_DEVELOPMENT:
     from secrets import *
