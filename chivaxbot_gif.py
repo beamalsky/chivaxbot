@@ -73,17 +73,11 @@ def get_gif_tweet():
 		loop=0
 	)
 
-	# generate the sentence and alt text too
-	tweet_text = '''
-		Read the latest on Chicago's widening vaccine disparity from @maerunes for @SouthSideWeekly: https://southsideweekly.com/chicagos-vaccine-disparity-widens/
-	'''
-
 	alt_text = '''
 		The animated gif shows a map of Chicago with vaccination rates for each ZIP code over time. As time passes from late January until today, the north west side pulls ahead of the rest of the city in vaccination rates.
 	'''
 
 	return {
-		"tweet_text": tweet_text,
 		"gif_path": gif_output_path,
 		"alt_text": alt_text,
 	}
