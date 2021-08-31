@@ -51,7 +51,7 @@ def get_colors_dict(values_dict, colorscale, data_type):
 	arr = [value for name, value in values_dict.items() if name in chicago_zips]
 
 	# alert us if there are unexpected zip values
-	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666", "60707"]]
+	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666", "60707", "60827"]]
 	if len(bad_zips_arr) > 0:
 		logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
 			data_type=data_type,
@@ -116,7 +116,7 @@ def get_colors_dict_absolute(values_dict, colorscale, date, data_type):
 
 	# alert us if there are unexpected zip values
 	arr = [value for name, value in values_dict.items() if name in chicago_zips]
-	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666", "60707"]]
+	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666", "60707", "60827"]]
 	if len(bad_zips_arr) > 0:
 		logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
 			data_type=data_type,
