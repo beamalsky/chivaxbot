@@ -27,8 +27,13 @@ def get_vax_perc_by_date(vax_json, date, save_totals=False):
 	for row in vax_json["data"]:
 		# we only want dose cumulatives from the latest date
 		# res date should be in the format 2021-01-18T00:00:00
-		if date == datetime.strptime(row[9], '%Y-%m-%dT00:00:00'):
+		if date == datetime.strptime(row[9], '%Y-%m-%dT00:00:00') and (row[8] in chicago_zips):
 			vax_perc[row[8]] = float(row[17])
+
+			# display values > 100% as 100%
+			if vax_perc[row[8]] > 1:
+				vax_perc[row[8]] = 1
+
 			vax_sum += int(row[16])
 			population_sum += int(row[27])
 
@@ -46,7 +51,7 @@ def get_colors_dict(values_dict, colorscale, data_type):
 	arr = [value for name, value in values_dict.items() if name in chicago_zips]
 
 	# alert us if there are unexpected zip values
-	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666"]]
+	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666", "60707"]]
 	if len(bad_zips_arr) > 0:
 		logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
 			data_type=data_type,
@@ -104,14 +109,14 @@ def get_colors_dict(values_dict, colorscale, data_type):
 
 	return colors_dict
 
-def get_colors_dict_absolute(values_dict, colorscale, date):
+def get_colors_dict_absolute(values_dict, colorscale, date, data_type):
 	colors_dict = {}
 	colors_dict["date"] = date.strftime("%B %-d")
 	colors_dict["year"] = date.strftime("%Y")
 
 	# alert us if there are unexpected zip values
 	arr = [value for name, value in values_dict.items() if name in chicago_zips]
-	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666"]]
+	bad_zips_arr = [name for name, value in values_dict.items() if name not in chicago_zips + ["Unknown", "60666", "60707"]]
 	if len(bad_zips_arr) > 0:
 		logging.error("Unexpected zip values for {data_type} data: {bad_zips}".format(
 			data_type=data_type,
@@ -190,7 +195,7 @@ chicago_zips = [
 	"60601",
 	"60606",
 	"60611",
-	# "60666", removed due to population of 0
+	# "60666", low pop
 	"60645",
 	"60625",
 	"60640",
@@ -199,7 +204,7 @@ chicago_zips = [
 	"60615",
 	"60621",
 	"60651",
-	"60707",
+	# "60707", low pop
 	"60631",
 	"60602",
 	"60607",
@@ -237,7 +242,7 @@ chicago_zips = [
 	"60661",
 	"60624",
 	"60609",
-	"60827",
+	# "60827", low pop
 	"60639",
 	"60632",
 	"60656",

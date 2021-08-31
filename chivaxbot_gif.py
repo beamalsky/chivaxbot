@@ -42,7 +42,7 @@ def get_gif_tweet():
 	date = datetime.strptime(start_date, '%Y-%m-%d')
 	while date <= now:
 		vax_perc = get_vax_perc_by_date(vax_res_json, date, save_totals=False)
-		vax_colors = get_colors_dict_absolute(vax_perc, gif_colorscale, date)
+		vax_colors = get_colors_dict_absolute(vax_perc, gif_colorscale, date, "vax")
 		output_path = os.path.join(
 			os.getcwd(),
 		 	"exports",
