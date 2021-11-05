@@ -35,7 +35,7 @@ def get_vax_perc_by_date(vax_json, date, save_totals=False):
 				vax_perc[row[8]] = 1
 
 			vax_sum += int(row[16])
-			population_sum += int(row[27])
+			population_sum += int(row[30])
 
 	if save_totals:
 		return {
